@@ -22,105 +22,18 @@ export default function MoodEntryCard() {
           .catch(() => setLocError(true)),
       () => setLocError(true)
     );
-
     const style = document.createElement("style");
     style.innerHTML = `
-      .react-calendar {
-        width: 100%;
-        background-color: rgba(255, 255, 255, 0.8);
-        border-radius: 0.75rem;
-        border: 1px solid rgba(16, 185, 129, 0.2);
-        font-family: inherit;
-        line-height: 1.5;
-        overflow: hidden;
-      }
-      .dark .react-calendar {
-        background-color: rgba(30, 41, 59, 0.7);
-        border-color: rgba(16, 185, 129, 0.1);
-        color: #f3f4f6;
-      }
-      .react-calendar__navigation {
-        background-color: rgba(16, 185, 129, 0.1);
-        margin-bottom: 0;
-        padding: 0.5rem;
-      }
-      .dark .react-calendar__navigation {
-        background-color: rgba(16, 185, 129, 0.2);
-      }
-      .react-calendar__navigation button {
-        color: #10b981;
-        font-weight: 600;
-        border-radius: 0.375rem;
-        margin: 0 0.25rem;
-      }
-      .dark .react-calendar__navigation button {
-        color: #6ee7b7;
-      }
-      .react-calendar__navigation button:enabled:hover,
-      .react-calendar__navigation button:enabled:focus {
-        background-color: rgba(16, 185, 129, 0.15);
-      }
-      .react-calendar__month-view__weekdays {
-        font-weight: 600;
-        font-size: 0.85rem;
-        padding: 0.5rem 0;
-        background-color: rgba(16, 185, 129, 0.05);
-      }
-      .dark .react-calendar__month-view__weekdays {
-        background-color: rgba(16, 185, 129, 0.1);
-        color: #d1fae5;
-      }
-      .react-calendar__month-view__days__day {
-        padding: 0.6rem 0;
-        font-weight: 500;
-      }
-      .dark .react-calendar__month-view__days__day {
-        color: #f3f4f6;
-      }
-      .react-calendar__tile--now {
-        background-color: rgba(16, 185, 129, 0.15);
-        font-weight: 700;
-      }
-      .dark .react-calendar__tile--now {
-        background-color: rgba(16, 185, 129, 0.3);
-      }
-      .react-calendar__tile--now:enabled:hover,
-      .react-calendar__tile--now:enabled:focus {
-        background-color: rgba(16, 185, 129, 0.25);
-      }
-      .react-calendar__tile:enabled:hover,
-      .react-calendar__tile:enabled:focus {
-        background-color: rgba(16, 185, 129, 0.1);
-        border-radius: 0.25rem;
-      }
-      .react-calendar__tile--active {
-        background-color: #10b981;
-        color: white;
-        border-radius: 0.25rem;
-      }
-      .react-calendar__tile--active:enabled:hover,
-      .react-calendar__tile--active:enabled:focus {
-        background-color: #059669;
-      }
-      .react-calendar__month-view__days__day--weekend {
-        color: #ec4899;
-      }
-      .dark .react-calendar__month-view__days__day--weekend {
-        color: #f9a8d4;
-      }
-      .react-calendar__month-view__days__day--neighboringMonth {
-        color: #9ca3af;
-      }
-      .dark .react-calendar__month-view__days__day--neighboringMonth {
-        color: #64748b;
-      }
-      .react-calendar__tile:disabled {
-        background-color: transparent;
-        color: rgba(156, 163, 175, 0.6);
-      }
-      .dark .react-calendar__tile:disabled {
-        color: rgba(148, 163, 184, 0.4);
-      }
+      .react-calendar { width:100%; background:rgba(255,255,255,0.9); border-radius:1rem; box-shadow:0 4px 8px rgba(0,0,0,0.1) }
+      .react-calendar__navigation { background:#10b981; border-top-left-radius:1rem; border-top-right-radius:1rem }
+      .react-calendar__navigation button { color:white; font-weight:600; min-width:2.5rem }
+      .react-calendar__navigation button:disabled { opacity:0.5 }
+      .react-calendar__navigation button:hover:not(:disabled) { background:rgba(255,255,255,0.2) }
+      .react-calendar__month-view__weekdays { background:#d1fae5; text-transform:uppercase; font-size:0.75rem }
+      .react-calendar__tile { border-radius:0.5rem; margin:0.15rem; height:2.5rem; line-height:2.5rem }
+      .react-calendar__tile:hover { background:rgba(16,185,129,0.2) }
+      .react-calendar__tile--active { background:#10b981; color:white }
+      .react-calendar__tile--now { background:rgba(16,185,129,0.3); font-weight:600 }
     `;
     document.head.appendChild(style);
     return () => document.head.removeChild(style);
@@ -128,9 +41,9 @@ export default function MoodEntryCard() {
 
   const handleSave = () => {
     if (!selectedMood) {
-      const moodSection = document.getElementById("mood-section");
-      moodSection.classList.add("animate-pulse");
-      setTimeout(() => moodSection.classList.remove("animate-pulse"), 1000);
+      const ms = document.getElementById("mood-section");
+      ms.classList.add("animate-pulse");
+      setTimeout(() => ms.classList.remove("animate-pulse"), 1000);
       return;
     }
     setSaving(true);
@@ -149,7 +62,7 @@ export default function MoodEntryCard() {
     }, 600);
   };
 
-  const formatDate = (d) => {
+  const fd = (d) => {
     try {
       if (!d || isNaN(d.getTime())) return "Today";
       return new Intl.DateTimeFormat("en-US", {
@@ -162,22 +75,18 @@ export default function MoodEntryCard() {
     }
   };
 
-  const bgColor = selectedMood
+  const bg = selectedMood
     ? `${moodMap[selectedMood].color} bg-opacity-20`
     : "bg-white/70 dark:bg-slate-800/50";
 
   return (
-    <div className="w-full sm:max-w-lg md:max-w-xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div className="w-full max-w-full md:max-w-xl lg:max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
       <div
-        className={`
-          relative p-6 sm:p-8 lg:p-10 rounded-3xl shadow-lg
-          ${bgColor} backdrop-blur-md border border-white/30 dark:border-slate-700/50
-          transition-all duration-500
-        `}
+        className={`relative p-6 sm:p-8 lg:p-10 rounded-3xl shadow-lg ${bg} backdrop-blur-md border border-white/30 dark:border-slate-700/50 transition-all duration-500`}
       >
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
           <h2 className="text-lg sm:text-xl md:text-2xl font-serif">
-            {formatDate(date)}
+            {fd(date)}
           </h2>
           <div className="mt-3 sm:mt-0 flex items-center gap-2 bg-white/40 dark:bg-slate-700/40 py-1 px-3 rounded-full shadow-sm backdrop-blur-md">
             {locError ? (
@@ -194,37 +103,13 @@ export default function MoodEntryCard() {
                 </span>
               </>
             ) : (
-              <span className="text-sm flex items-center gap-1">
-                <svg
-                  className="animate-spin h-4 w-4 text-current"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                  />
-                </svg>
-                Loading…
-              </span>
+              <span className="text-sm flex items-center gap-1">Loading…</span>
             )}
           </div>
         </div>
-
         <h3 className="text-center text-lg sm:text-xl font-medium mb-4">
           How are you feeling today?
         </h3>
-
         <div
           id="mood-section"
           className="grid grid-cols-5 gap-2 sm:flex sm:justify-around mb-8 p-2"
@@ -233,32 +118,21 @@ export default function MoodEntryCard() {
             <button
               key={m}
               onClick={() => setSelectedMood(m)}
-              className={`
-                text-3xl sm:text-4xl p-2 sm:p-3 rounded-full
-                ${
-                  selectedMood === m
-                    ? "transform scale-125 shadow-lg bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm"
-                    : "opacity-70 hover:opacity-100 hover:scale-110"
-                }
-                transition-all duration-300
-              `}
+              className={`text-3xl sm:text-4xl p-2 sm:p-3 rounded-full ${
+                selectedMood === m
+                  ? "transform scale-125 shadow-lg bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm"
+                  : "opacity-70 hover:opacity-100 hover:scale-110"
+              } transition-all duration-300`}
               title={m.charAt(0).toUpperCase() + m.slice(1)}
             >
               {moodMap[m].icon}
             </button>
           ))}
         </div>
-
         <div className="relative mb-6">
           <textarea
             rows={3}
-            className="
-              w-full p-3 sm:p-4 border border-emerald-100 dark:border-emerald-800/30
-              rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 dark:focus:ring-emerald-600
-              bg-white/70 dark:bg-slate-800/50 backdrop-blur-sm
-              transition-all duration-300 placeholder-emerald-800/40 dark:placeholder-emerald-100/40
-              resize-none
-            "
+            className="w-full p-3 sm:p-4 border border-emerald-100 dark:border-emerald-800/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 dark:focus:ring-emerald-600 bg-white/70 dark:bg-slate-800/50 backdrop-blur-sm transition-all duration-300 placeholder-emerald-800/40 dark:placeholder-emerald-100/40 resize-none"
             placeholder="Add a note about how you're feeling..."
             value={note}
             onChange={(e) => setNote(e.target.value)}
@@ -267,60 +141,25 @@ export default function MoodEntryCard() {
             {note.length} chars
           </div>
         </div>
-
         <button
           onClick={handleSave}
           disabled={saving}
-          className={`
-            w-full py-2 sm:py-3 mb-6 rounded-xl font-medium text-white
-            transition-all duration-300 transform flex items-center justify-center gap-2
-            ${
-              saving
-                ? "bg-emerald-500 cursor-wait opacity-80"
-                : "bg-emerald-600 hover:bg-emerald-700 hover:shadow-lg active:scale-95"
-            }
-          `}
+          className={`w-full py-2 sm:py-3 mb-6 rounded-xl font-medium text-white transition-all duration-300 transform flex items-center justify-center gap-2 ${
+            saving
+              ? "bg-emerald-500 cursor-wait opacity-80"
+              : "bg-emerald-600 hover:bg-emerald-700 hover:shadow-lg active:scale-95"
+          }`}
         >
-          {saving ? (
-            <svg
-              className="animate-spin h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-              />
-            </svg>
-          ) : showSavedMessage ? (
-            "✓ Saved!"
-          ) : (
-            "Save Entry"
-          )}
+          {saving ? "Saving…" : showSavedMessage ? "✓ Saved!" : "Save Entry"}
         </button>
-
-        <div className="custom-calendar-wrapper">
+        <div className="mt-6 bg-white/80 dark:bg-slate-800/80 p-4 rounded-2xl shadow-inner">
           <Calendar
             value={date}
-            className="
-              w-full rounded-xl overflow-hidden shadow-md
-              border border-emerald-100 dark:border-emerald-800/30
-            "
-            tileClassName="hover:bg-emerald-100 dark:hover:bg-emerald-800/20"
+            className="rounded-lg"
+            tileClassName="p-2"
             showNeighboringMonth={false}
           />
         </div>
-
         <div className="hidden lg:block absolute -right-10 -bottom-10 text-8xl opacity-5 rotate-12">
           🌿
         </div>
