@@ -1,11 +1,11 @@
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
 
 const STORAGE_KEY = "moodEntries";
 
-export function saveEntry(entry) {
+export function saveEntry(e) {
   const all = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  all.push(entry);
+  all.push(e);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
 }
 
@@ -14,35 +14,8 @@ export function loadEntries() {
 }
 
 export function exportEntriesAsCSV(entries) {
-  if (!entries || entries.length === 0) return;
-
-  const header = ["Date", "Mood", "Note", "Temp (°C)", "Weather"];
-
-  const rows = entries.map((e) => {
-    const date = new Date(e.date).toLocaleDateString();
-    const mood = e.mood;
-    const note = (e.note || "").replace(/"/g, '""');
-    const temp = e.weather?.temp ?? "";
-    const weather = e.weather?.desc ?? "";
-    return [date, mood, `"${note}"`, temp, weather].join(",");
-  });
-
-  const csvContent = [header.join(","), ...rows].join("\r\n");
-
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.setAttribute("download", `mood-journal-${Date.now()}.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
-export function exportEntriesAsPDF(entries) {
   if (!entries.length) return;
-  const doc = new jsPDF({ unit: "pt", format: "letter" });
-  const header = ["Date", "Mood", "Note", "Temp (°C)", "Weather"];
+  const header = ["Date", "Mood", "Note", "Temp", "Weather"];
   const rows = entries.map((e) => [
     new Date(e.date).toLocaleDateString(),
     e.mood,
@@ -50,14 +23,39 @@ export function exportEntriesAsPDF(entries) {
     e.weather?.temp ?? "",
     e.weather?.desc ?? "",
   ]);
-  doc.setFontSize(14);
+  const csv = [header, ...rows]
+    .map((r) => r.map((c) => `"${c}"`).join(","))
+    .join("\r\n");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `mood-journal-${Date.now()}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+export function exportEntriesAsPDF(entries) {
+  if (!entries.length) return;
+  const doc = new jsPDF({ unit: "pt", format: "letter" });
+  doc.setFontSize(16);
   doc.text("Mood Journal", 40, 40);
-  doc.autoTable({
+  const head = [["Date", "Mood", "Note", "Temp (°C)", "Weather"]];
+  const body = entries.map((e) => [
+    new Date(e.date).toLocaleDateString(),
+    e.mood,
+    e.note || "",
+    e.weather?.temp ?? "",
+    e.weather?.desc ?? "",
+  ]);
+  autoTable(doc, {
     startY: 60,
-    head: [header],
-    body: rows,
+    head,
+    body,
     styles: { fontSize: 10, cellPadding: 4 },
-    headStyles: { fillColor: [240, 240, 240] },
+    headStyles: { fillColor: [16, 185, 129] },
   });
   doc.save(`mood-journal-${Date.now()}.pdf`);
 }

@@ -27,13 +27,12 @@ export default function MoodEntryCard() {
       .react-calendar { width:100%; background:rgba(255,255,255,0.9); border-radius:1rem; box-shadow:0 4px 8px rgba(0,0,0,0.1) }
       .react-calendar__navigation { background:#10b981; border-top-left-radius:1rem; border-top-right-radius:1rem }
       .react-calendar__navigation button { color:white; font-weight:600; min-width:2.5rem }
-      .react-calendar__navigation button:disabled { opacity:0.5 }
-      .react-calendar__navigation button:hover:not(:disabled) { background:rgba(255,255,255,0.2) }
       .react-calendar__month-view__weekdays { background:#d1fae5; text-transform:uppercase; font-size:0.75rem }
-      .react-calendar__tile { border-radius:0.5rem; margin:0.15rem; height:2.5rem; line-height:2.5rem }
+      .react-calendar__tile { border-radius:0.5rem; margin:0.15rem; height:2.5rem; line-height:2.5rem; color:#111 }
       .react-calendar__tile:hover { background:rgba(16,185,129,0.2) }
       .react-calendar__tile--active { background:#10b981; color:white }
       .react-calendar__tile--now { background:rgba(16,185,129,0.3); font-weight:600 }
+      .dark .react-calendar__tile { color:#f3f4f6 }
     `;
     document.head.appendChild(style);
     return () => document.head.removeChild(style);
@@ -75,19 +74,17 @@ export default function MoodEntryCard() {
     }
   };
 
-  const bg = selectedMood
+  const bgColor = selectedMood
     ? `${moodMap[selectedMood].color} bg-opacity-20`
     : "bg-white/70 dark:bg-slate-800/50";
 
   return (
-    <div className="w-full max-w-full md:max-w-xl lg:max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div className="w-full mx-0 px-0 mt-4">
       <div
-        className={`relative p-6 sm:p-8 lg:p-10 rounded-3xl shadow-lg ${bg} backdrop-blur-md border border-white/30 dark:border-slate-700/50 transition-all duration-500`}
+        className={`relative p-6 sm:p-8 lg:p-10 rounded-3xl shadow-lg ${bgColor} backdrop-blur-md border border-white/30 dark:border-slate-700/50 transition-all duration-500`}
       >
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-serif">
-            {fd(date)}
-          </h2>
+          <h2 className="text-xl font-serif">{fd(date)}</h2>
           <div className="mt-3 sm:mt-0 flex items-center gap-2 bg-white/40 dark:bg-slate-700/40 py-1 px-3 rounded-full shadow-sm backdrop-blur-md">
             {locError ? (
               <span className="text-sm italic">📍 Location unavailable</span>
@@ -96,34 +93,31 @@ export default function MoodEntryCard() {
                 <img
                   src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
                   alt={weather.desc}
-                  className="w-6 h-6 sm:w-8 sm:h-8"
+                  className="w-6 h-6"
                 />
-                <span className="text-sm sm:text-base font-medium">
-                  {weather.temp}°C
-                </span>
+                <span className="text-sm font-medium">{weather.temp}°C</span>
               </>
             ) : (
-              <span className="text-sm flex items-center gap-1">Loading…</span>
+              <span className="text-sm">Loading…</span>
             )}
           </div>
         </div>
-        <h3 className="text-center text-lg sm:text-xl font-medium mb-4">
+        <h3 className="text-center text-lg font-medium mb-4">
           How are you feeling today?
         </h3>
         <div
           id="mood-section"
-          className="grid grid-cols-5 gap-2 sm:flex sm:justify-around mb-8 p-2"
+          className="flex flex-wrap justify-center gap-4 mb-8 p-2"
         >
           {moods.map((m) => (
             <button
               key={m}
               onClick={() => setSelectedMood(m)}
-              className={`text-3xl sm:text-4xl p-2 sm:p-3 rounded-full ${
+              className={`text-3xl sm:text-4xl p-3 rounded-full ${
                 selectedMood === m
-                  ? "transform scale-125 shadow-lg bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm"
+                  ? "transform scale-125 drop-shadow-xl bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm"
                   : "opacity-70 hover:opacity-100 hover:scale-110"
               } transition-all duration-300`}
-              title={m.charAt(0).toUpperCase() + m.slice(1)}
             >
               {moodMap[m].icon}
             </button>
@@ -132,30 +126,30 @@ export default function MoodEntryCard() {
         <div className="relative mb-6">
           <textarea
             rows={3}
-            className="w-full p-3 sm:p-4 border border-emerald-100 dark:border-emerald-800/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 dark:focus:ring-emerald-600 bg-white/70 dark:bg-slate-800/50 backdrop-blur-sm transition-all duration-300 placeholder-emerald-800/40 dark:placeholder-emerald-100/40 resize-none"
-            placeholder="Add a note about how you're feeling..."
+            className="w-full p-4 border border-emerald-200 dark:border-emerald-800/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 dark:focus:ring-emerald-600 bg-white/70 dark:bg-slate-800/50 backdrop-blur-sm transition-all duration-300 resize-none"
+            placeholder="Add a note..."
             value={note}
             onChange={(e) => setNote(e.target.value)}
           />
-          <div className="absolute bottom-2 right-3 text-xs opacity-50 font-medium">
+          <div className="absolute bottom-2 right-3 text-xs opacity-50">
             {note.length} chars
           </div>
         </div>
         <button
           onClick={handleSave}
           disabled={saving}
-          className={`w-full py-2 sm:py-3 mb-6 rounded-xl font-medium text-white transition-all duration-300 transform flex items-center justify-center gap-2 ${
+          className={`w-full py-3 mb-6 rounded-xl text-white font-medium transition-all duration-300 transform ${
             saving
               ? "bg-emerald-500 cursor-wait opacity-80"
-              : "bg-emerald-600 hover:bg-emerald-700 hover:shadow-lg active:scale-95"
+              : "bg-emerald-600 hover:bg-emerald-700"
           }`}
         >
           {saving ? "Saving…" : showSavedMessage ? "✓ Saved!" : "Save Entry"}
         </button>
-        <div className="mt-6 bg-white/80 dark:bg-slate-800/80 p-4 rounded-2xl shadow-inner">
+        <div className="bg-white/80 dark:bg-slate-800/80 p-6 sm:p-8 rounded-2xl shadow-inner w-full overflow-x-auto -mx-4 sm:mx-0">
           <Calendar
             value={date}
-            className="rounded-lg"
+            className="w-[360px] sm:w-full rounded-lg"
             tileClassName="p-2"
             showNeighboringMonth={false}
           />
