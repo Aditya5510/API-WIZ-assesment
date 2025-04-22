@@ -1,12 +1,54 @@
-# React + Vite
+# Mood Journal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive personal mood journal web app built with **React**, **Vite**, and **Tailwind CSS**. Log your daily mood alongside real-time weather data, then browse, filter, and export your entries.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Mood Logging:** Choose from 5 emoji-based moods and add a short note.
+- **Weather Integration:** Automatic geolocation and OpenWeatherMap API for current temperature and conditions.
+- **Calendar & History:** View a calendar on the homepage; browse all past entries on a dedicated “All Notes” page.
+- **Filtering & Export:** Filter entries by mood; export to **CSV** or **PDF**.
+- **Mood Trends:** Stacked bar chart showing mood distribution over the last 7 days.
+- **Dark Mode:** Toggle between light and dark themes.
+- **Detail Modal:** Click any entry to view details or delete it.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Framework:** React (Vite)
+- **Styling:** Tailwind CSS
+- **Routing:** React Router
+- **Calendar:** react-calendar
+- **Charts:** Recharts
+- **HTTP:** Axios
+- **Export:** jsPDF + autotable
+
+## Getting Started
+
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/your-username/mood-journal.git
+   cd mood-journal
+   ```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+3. **Configure environment**
+   Create a `.env.local` file with:
+   ```env
+   VITE_API_KEY=your_openweathermap_api_key
+   ```
+4. **Run the app**
+   ```bash
+   npm run dev
+   ```
+
+Visit `http://localhost:5173` in your browser.
+
+## Available Scripts
+
+- `npm run dev` — start development server
+- `npm run build` — bundle for production
+- `npm run preview` — locally preview production build
+
+
