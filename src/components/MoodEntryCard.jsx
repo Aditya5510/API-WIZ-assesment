@@ -325,6 +325,9 @@ export default function MoodEntryCard() {
           🌿
         </div>
       </div>
+      <p className="text-center mt-4 text-sm opacity-60">
+        Your mood entries are stored locally on your device
+      </p>
     </div>
   );
 }
